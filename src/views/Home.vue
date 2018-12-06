@@ -4,7 +4,8 @@
       <div  v-for="(ts, depth) in taxonSelectors" class="taxon-selector">
         <select v-model="selected[depth]">
           <option value="" selected disabled hidden>Choose here</option>
-          <option v-for="node in filterTaxons(depth)">{{node.content}}</option>
+          <option v-for="node in filterTaxons(depth)"
+                  :value="node.id">{{node.content}}</option>
         </select>
 
         <div v-if="depth < highestLevel && selected[depth]"
@@ -37,13 +38,13 @@ const TAXONOMY_DATA = {
 
 interface LevelIndex {
     [key: string]: MyNodeModel[];
-}
+};
 
 interface TaxonSelectorSpec {
 };
 
 interface ComponentData {
-    selected: string[];
+    selected: number[];
     taxonSelectors: TaxonSelectorSpec[];
 };
 
@@ -72,9 +73,13 @@ export default Vue.extend({
             const newTaxonSelector: TaxonSelectorSpec = {};
             this.taxonSelectors.push(newTaxonSelector);
         },
+        getPath(): number[] {
+            return this.selected;
+        },
         filterTaxons(depth: number) {
-            console.log("selected value is %o", this.selected);
-            return this.taxonomyLevelIndex[depth];
+            // console.log("selected value is %o", this.selected);
+            // return this.taxonomyLevelIndex[depth];
+            util.findValidChildren(root, this.getPath());
         }
     },
     computed: {
