@@ -1,7 +1,17 @@
 <template>
   <div class="home">
     <div class="compound-widget">
-      <div class="taxon-selector">
+      <div  v-for="ts in taxonSelectors" class="taxon-selector">
+        <select id="pet-select">
+          <option value="" selected disabled hidden>Choose here</option>
+          <option value="dog">Dog</option>
+          <option value="cat">Cat</option>
+          <option value="hamster">Hamster</option>
+          <option value="parrot">Parrot</option>
+          <option value="spider">Spider</option>
+          <option value="goldfish">Goldfish</option>
+        </select>
+        <div class="create-next-level-ts-button" v-on:click="addNewTaxonSelector"/>
       </div>
     </div>
   </div>
@@ -19,10 +29,22 @@ const TAXONOMY_DATA = {
     'content': 'Music',
     'id': 0,
     'label': 'Taxon'
+};
+
+interface MyNodeModel {
+    content: string;
+    id: number;
+    label: string;
+};
+
+interface LevelIndex {
+    [key: string]: string[];
 }
 
+
 const config = {};
-const t = new TreeModel(config)
+const treeModel = new TreeModel(config)
+const root = treeModel.parse<MyNodeModel>(TAXONOMY_DATA);
 
 export default Vue.extend({
     name: 'home',
@@ -33,12 +55,22 @@ export default Vue.extend({
         };
     },
     created() {
-        this.addNewCompoundWidget();
+        this.addNewTaxonSelector();
+    },
+    mounted() {
+        console.log("Foo is %o", root);
     },
     methods: {
-        addNewCompoundWidget() {
+        addNewTaxonSelector() {
             const newTaxonSelector: object = {};
             this.taxonSelectors.push(newTaxonSelector);
+        }
+    },
+    computed: {
+        taxonomyLevelIndex() {
+            const i = 0;
+            const result: LevelIndex = {};
+            result[i] = [];
         }
     }
 });
@@ -48,11 +80,24 @@ export default Vue.extend({
 .compound-widget {
     border: 1px solid black;
     padding: 1em;
+
+    display: flex;
+    flex-direction: row;
+}
+
+.compound-widget > * {
+    margin: 10px;
 }
 
 .taxon-selector {
     border: 1px solid red;
     height: 200px;
     width: 100px;
+}
+
+.create-next-level-ts-button {
+    width: 32px;
+    height: 32px;
+    background-color: green;
 }
 </style>
