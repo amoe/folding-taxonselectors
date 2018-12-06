@@ -2,11 +2,12 @@
   <div class="home">
     <div class="compound-widget">
       <div  v-for="(ts, index) in taxonSelectors" class="taxon-selector">
-        <select>
+        <select v-model="selected[index]">
           <option value="" selected disabled hidden>Choose here</option>
           <option v-for="value in taxonomyLevelIndex[index]">{{value}}</option>
         </select>
-        <div v-if="index < highestLevel"
+
+        <div v-if="index < highestLevel && selected[index]"
              class="create-next-level-ts-button" v-on:click="addNewTaxonSelector"/>
       </div>
     </div>
@@ -43,7 +44,8 @@ interface TaxonSelectorSpec {
 };
 
 interface ComponentData {
-    taxonSelectors: TaxonSelectorSpec[]
+    selected: string[];
+    taxonSelectors: TaxonSelectorSpec[];
 };
 
 
@@ -56,6 +58,7 @@ export default Vue.extend({
     components: {},
     data(): ComponentData {
         return {
+            selected: [],
             taxonSelectors: []
         };
     },
