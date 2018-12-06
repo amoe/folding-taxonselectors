@@ -1,14 +1,17 @@
 <template>
   <div class="home">
     <div class="compound-widget">
-      <div  v-for="ts in taxonSelectors" class="taxon-selector">
-        <select id="pet-select">
+      <div  v-for="(ts, index) in taxonSelectors" class="taxon-selector">
+        <select>
           <option value="" selected disabled hidden>Choose here</option>
-          <option v-for="value in taxonomyLevelIndex[0]">{{value}}</option>
+          <option v-for="value in taxonomyLevelIndex[index]">{{value}}</option>
         </select>
-        <div class="create-next-level-ts-button" v-on:click="addNewTaxonSelector"/>
+        <div v-if="index < highestLevel"
+             class="create-next-level-ts-button" v-on:click="addNewTaxonSelector"/>
       </div>
     </div>
+    
+    {{highestLevel}}
   </div>
 </template>
 
@@ -36,6 +39,13 @@ interface LevelIndex {
     [key: string]: string[];
 }
 
+interface TaxonSelectorSpec {
+};
+
+interface ComponentData {
+    taxonSelectors: TaxonSelectorSpec[]
+};
+
 
 const config = {};
 const treeModel = new TreeModel(config)
@@ -44,7 +54,7 @@ const root = treeModel.parse<MyNodeModel>(TAXONOMY_DATA);
 export default Vue.extend({
     name: 'home',
     components: {},
-    data(): any {
+    data(): ComponentData {
         return {
             taxonSelectors: []
         };
@@ -57,7 +67,7 @@ export default Vue.extend({
     },
     methods: {
         addNewTaxonSelector() {
-            const newTaxonSelector: object = {};
+            const newTaxonSelector: TaxonSelectorSpec = {};
             this.taxonSelectors.push(newTaxonSelector);
         }
     },
@@ -81,6 +91,12 @@ export default Vue.extend({
             console.log("generated index: %o", result);
 
             return result;
+        },
+        highestLevel(): number {
+            const availableLevels = Object.keys(this.taxonomyLevelIndex);
+            availableLevels.sort();
+            availableLevels.reverse();
+            return parseInt(availableLevels[0]);
         }
     }
 });
