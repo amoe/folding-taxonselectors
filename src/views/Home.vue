@@ -1,13 +1,13 @@
 <template>
   <div class="home">
     <div class="compound-widget">
-      <div  v-for="(ts, index) in taxonSelectors" class="taxon-selector">
-        <select v-model="selected[index]">
+      <div  v-for="(ts, depth) in taxonSelectors" class="taxon-selector">
+        <select v-model="selected[depth]">
           <option value="" selected disabled hidden>Choose here</option>
-          <option v-for="value in taxonomyLevelIndex[index]">{{value}}</option>
+          <option v-for="value in taxonomyLevelIndex[depth]">{{value}}</option>
         </select>
 
-        <div v-if="index < highestLevel && selected[index]"
+        <div v-if="depth < highestLevel && selected[depth]"
              class="create-next-level-ts-button" v-on:click="addNewTaxonSelector"/>
       </div>
     </div>
@@ -23,8 +23,10 @@ import TreeModel from 'tree-model';
 // For this demo, there's just one compound widget, and that can be modified
 
 const TAXONOMY_DATA = {
-    'children': [{'content': 'Rock', 'id': 1, 'label': 'Taxon'},
-                 {'content': 'Classical', 'id': 2, 'label': 'Taxon'}],
+    'children': [{'content': 'Rock', 'id': 1, 'label': 'Taxon',
+                  'children': [{'content': 'Metal', 'id': 3, 'label': 'Taxon'}]},
+                 {'content': 'Classical', 'id': 2, 'label': 'Taxon',
+                  'children': [{'content': 'Baroque', 'id': 4, 'label': 'Taxon'}]}],
     'content': 'Music',
     'id': 0,
     'label': 'Taxon'
