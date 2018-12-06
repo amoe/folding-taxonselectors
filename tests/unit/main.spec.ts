@@ -1,5 +1,6 @@
 import TreeModel from 'tree-model';
-import { Node } from 'tree-model';
+import util from '@/util';
+import { MyNodeModel } from '@/types'
 
 const TAXONOMY_DATA = {
     'children': [{
@@ -15,39 +16,15 @@ const TAXONOMY_DATA = {
     'label': 'Taxon'
 };
 
-interface MyNodeModel {
-    content: string;
-    id: number;
-    label: string;
-};
-
-type MyNode = Node<MyNodeModel>;
+const WANTED_PATH = [0, 2];
 
 const config = {};
 const treeModel = new TreeModel(config);
 const root = treeModel.parse<MyNodeModel>(TAXONOMY_DATA);
 
-const WANTED_PATH = [0, 2];
-
-function findValidChildren(
-    rootNode: Node<MyNodeModel>, wantedPath: number[]
-): string[] {
-    // Find the leaf of the path...
-    const leaf = wantedPath[wantedPath.length - 1]
-
-    const result = rootNode.all(function(node): boolean {
-        return node.model.id === leaf;
-    });
-
-
-
-    const children: MyNode[] = result[0].children;
-    return children.map(n => n.model.content);
-}
-
 describe('my suite', () => {
     it('can do arithmetic', () => {
-        const result = findValidChildren(root, WANTED_PATH);
+        const result = util.findValidChildren(root, WANTED_PATH);
         expect(result).toEqual(['Baroque']);
     });
 });
