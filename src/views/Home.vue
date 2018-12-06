@@ -1,19 +1,21 @@
 <template>
   <div class="home">
     <div class="compound-widget">
-      <div  v-for="(ts, depth) in taxonSelectors" class="taxon-selector">
-        <select v-model="selected[depth]">
+      <div  v-for="(ts, depth) in taxonSelectors" class="taxon-selector" :key="depth">
+        <select v-on:change="onChange($event, depth)">
           <option value="" selected disabled hidden>Choose here</option>
           <option v-for="node in filterTaxons(depth)"
-                  :value="node.id">{{node.content}}</option>
+                  :value="node.id"
+                  :key="node.id">{{node.content}}</option>
         </select>
 
-        <div v-if="depth < highestLevel && selected[depth - 1]"
+        <div v-if="depth < highestLevel && selected[depth]"
              class="create-next-level-ts-button" v-on:click="addNewTaxonSelector"/>
       </div>
     </div>
     
     Highest level available is {{highestLevel}}
+    Path is {{selected}}
   </div>
 </template>
 
@@ -69,6 +71,18 @@ export default Vue.extend({
         console.log("Foo is %o", root);
     },
     methods: {
+        onChange(e: Event, depth: number) {
+            if (e.currentTarget === null) throw new Error("bad");
+            const target: EventTarget = e.currentTarget;
+
+            const casted = target as HTMLSelectElement;
+            console.log("target value is %o", casted.value);
+            console.log("depth is %o", depth);
+
+            // Splice is crucial here!
+            this.selected.splice(depth, 1, parseInt(casted.value));
+            console.log("selected is now %o", JSON.stringify(this.selected));
+        },
         addNewTaxonSelector() {
             const newTaxonSelector: TaxonSelectorSpec = {};
             this.taxonSelectors.push(newTaxonSelector);
@@ -77,6 +91,7 @@ export default Vue.extend({
             return this.selected;
         },
         filterTaxons(depth: number) {
+            console.log("filtertaxons called for depth: %o", depth);
             console.log("Path is: %o", JSON.stringify(this.getPath()));
             return util.findValidChildren(root, this.getPath());
         }
