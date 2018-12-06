@@ -8,12 +8,12 @@
                   :value="node.id">{{node.content}}</option>
         </select>
 
-        <div v-if="depth < highestLevel && selected[depth]"
+        <div v-if="depth < highestLevel && selected[depth - 1]"
              class="create-next-level-ts-button" v-on:click="addNewTaxonSelector"/>
       </div>
     </div>
     
-    {{highestLevel}}
+    Highest level available is {{highestLevel}}
   </div>
 </template>
 
@@ -77,9 +77,8 @@ export default Vue.extend({
             return this.selected;
         },
         filterTaxons(depth: number) {
-            // console.log("selected value is %o", this.selected);
-            // return this.taxonomyLevelIndex[depth];
-            util.findValidChildren(root, this.getPath());
+            console.log("Path is: %o", JSON.stringify(this.getPath()));
+            return util.findValidChildren(root, this.getPath());
         }
     },
     computed: {

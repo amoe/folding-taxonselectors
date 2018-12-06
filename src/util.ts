@@ -14,7 +14,7 @@ function getVirtualRoot(rootNode: MyNode, wantedPath: number[]): MyNode {
     if (result.length === 1) {
         return result[0];
     } else {
-        throw new Error("not found");
+        throw new Error("not found: " + leaf);
     }
 }
 
