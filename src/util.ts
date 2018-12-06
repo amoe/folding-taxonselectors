@@ -11,10 +11,10 @@ function findValidChildren(
         return node.model.id === leaf;
     });
 
-
+    // FIXME: check result has one item
 
     const children: MyNode[] = result[0].children;
-    return children.map(n => n.model.content);
+    return children.map(n => n.model);
 }
 
 

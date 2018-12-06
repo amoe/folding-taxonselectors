@@ -25,6 +25,8 @@ const root = treeModel.parse<MyNodeModel>(TAXONOMY_DATA);
 describe('my suite', () => {
     it('can do arithmetic', () => {
         const result = util.findValidChildren(root, WANTED_PATH);
-        expect(result).toEqual(['Baroque']);
+        expect(result).toEqual(
+            [{ 'content': 'Baroque', 'id': 4, 'label': 'Taxon' }]
+        );
     });
 });

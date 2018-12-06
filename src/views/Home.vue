@@ -19,6 +19,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import TreeModel from 'tree-model';
+import {MyNodeModel, MyNode} from '@/types';
+import util from '@/util';
 
 // For this demo, there's just one compound widget, and that can be modified
 
@@ -32,11 +34,6 @@ const TAXONOMY_DATA = {
     'label': 'Taxon'
 };
 
-interface MyNodeModel {
-    content: string;
-    id: number;
-    label: string;
-};
 
 interface LevelIndex {
     [key: string]: MyNodeModel[];
