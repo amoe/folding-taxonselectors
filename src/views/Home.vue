@@ -4,12 +4,7 @@
       <div  v-for="ts in taxonSelectors" class="taxon-selector">
         <select id="pet-select">
           <option value="" selected disabled hidden>Choose here</option>
-          <option value="dog">Dog</option>
-          <option value="cat">Cat</option>
-          <option value="hamster">Hamster</option>
-          <option value="parrot">Parrot</option>
-          <option value="spider">Spider</option>
-          <option value="goldfish">Goldfish</option>
+          <option v-for="value in taxonomyLevelIndex[0]">{{value}}</option>
         </select>
         <div class="create-next-level-ts-button" v-on:click="addNewTaxonSelector"/>
       </div>
@@ -67,10 +62,25 @@ export default Vue.extend({
         }
     },
     computed: {
-        taxonomyLevelIndex() {
+        taxonomyLevelIndex(): LevelIndex {
             const i = 0;
             const result: LevelIndex = {};
-            result[i] = [];
+
+            root.walk(function (node): boolean {
+                const level = node.getPath().length - 1;
+
+                if (!(level in result)) {
+                    result[level] = [];
+                }
+
+                console.log("node content: ", node.model.content);
+                result[level].push(node.model.content);
+                return true;
+            });
+
+            console.log("generated index: %o", result);
+
+            return result;
         }
     }
 });
